@@ -1,0 +1,7 @@
+segno
+streamlit
+opencv-python-headless
+pillow
+pymongo
+hugchat
+pandas
