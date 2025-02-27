@@ -36,16 +36,16 @@ if "watering_selection" not in st.session_state:
     st.session_state.watering_selection = None
 if "error_origin" not in st.session_state:
     st.session_state.error_origin = "home"
-if "plant1" not in st.session_state:  # Custom Spider Plant name
+if "plant1" not in st.session_state:
     st.session_state.plant1 = None
-if "plant2" not in st.session_state:  # Custom Succulent name
+if "plant2" not in st.session_state:
     st.session_state.plant2 = None
 
 # Using CSS to style all Streamlit buttons according to the plant theme
 # This information was taken from https://www.restack.io/docs/streamlit-knowledge-streamlit-button-color-guide
 
 # Using !important to make sure streamlit do not override the style
-# This nformation was taken from https://www.w3schools.com/css/css_important.asp#:~:text=What%20is%20!important%3F,specific%20property%20on%20that%20element!
+# This information was taken from https://www.w3schools.com/css/css_important.asp#:~:text=What%20is%20!important%3F,specific%20property%20on%20that%20element!
 button_style = """
 <style>
 div.stButton > button {
