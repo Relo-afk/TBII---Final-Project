@@ -3,63 +3,74 @@ import datetime
 import pandas as pd
 from helpers import connect_to_collection
 
+
 def registration_page():
     placeholder = st.empty()
     with placeholder.form("Register to your plant care app: tbi_botanagochi"):
         st.image("images/registrationpage_banner.png")
         st.subheader("🌱 REGISTER NEW USER🌱")
-        username = st.text_input("User Name*")
-        password = st.text_input("Password*", type="password")
-        repeat_password = st.text_input("Repeat Password*", type="password")
-        name = st.text_input("Enter Name")
-        plant1 = st.text_input("Enter Your Spider Plant's Name")
-        plant2 = st.text_input("Enter Your Succulent's Name")
+
+        # I put the fields with .strip() and .lower() to make sure data when a user is making a username with capital letters, the data is taken without an issue.
+        username = st.text_input("User Name* (min. 4 characters)").strip().lower()
+        password = st.text_input("Password* (min. 5 characters)", type="password").strip()
+        repeat_password = st.text_input("Repeat Password*", type="password").strip()
+        email = st.text_input("Enter Your Email*").strip().lower()
+        plant1 = st.text_input("Enter Your Spider Plant's Name*").strip()
+        plant2 = st.text_input("Enter Your Succulent's Name*").strip()
+
         submit_button = st.form_submit_button("Register")
 
     if submit_button:
-        # define the database
+
+        # Define the database and collection
         db_name = 'streamlit_registration_data'
-        # define the collection
         collection_name = 'userinfo'
         collection = connect_to_collection(db_name, collection_name)
 
-        # write some dummy data to the collection so it does not error
-        dummy_data = {"user_name": "test"}
-        collection.insert_one(dummy_data)
+        # Read the data from the collection and identify existing usernames
+        user_data = pd.DataFrame(list(collection.find({}, {"user_name": 1})))
+        #The purpoe of the {"user_name":1] query is to only check the username. This makes the process faster as it does not check other inputs and saves time.
+        usernames = user_data["user_name"].tolist() if not user_data.empty else []
 
-        # read the data from the collection and identify user names
-        user_data = pd.DataFrame(list(collection.find()))
-        usernames = list(user_data.user_name)
-
-        if len(username) < 1:
-            st.error("ENTER USERNAME", icon="⚠️")
-        elif len(password) < 1:
-            st.error("ENTER PASSWORD", icon="⚠️")
-        elif len(name) < 1:
-            st.error("ENTER NAME", icon="⚠️")
-        elif len(plant1) < 1:
-            st.error("ENTER YOUR SPIDER PLANT'S NAME", icon="⚠️")
-        elif len(plant2) < 1:
-            st.error("ENTER YOUR SUCCULENT'S NAME", icon="⚠️")
+        # Validating the inputs
+        if not username:
+            st.error("Username is required.", icon="⚠️")
+        elif len(username) < 5:
+            st.error("Username must be at least 5 characters long.", icon="⚠️")
+        elif not password:
+            st.error("Password is required.", icon="⚠️")
+        elif len(password) < 4:
+            st.error("Password must be at least 4 characters long.", icon="⚠️")
+        elif not email:
+            st.error("Email is required.", icon="⚠️")
+        elif "@" not in email or "." not in email:
+            st.error("Please enter a valid email address.", icon="⚠️")
+        elif not plant1:
+            st.error("Please enter your Spider Plant's name.", icon="⚠️")
+        elif not plant2:
+            st.error("Please enter your Succulent's name.", icon="⚠️")
         elif password != repeat_password:
-            st.warning("PASSWORDS DONT MATCH", icon="⚠️")
+            st.warning("Passwords do not match.", icon="⚠️")
         elif username in usernames:
-            st.warning("USERNAME ALREADY EXISTS", icon="🔥")
+            st.warning("Username already exists. Please choose a different username.", icon="🔥")
         else:
-            # creating a document with the data we want to write to this collection
-            document = {"user_name": username,
-                        "password": password,
-                        "name": name,
-                        "plant1": plant1,
-                        "plant2": plant2,
-                        "created_at": datetime.datetime.now()}
+            # Create a document with the data to write to the collection
+            document = {
+                "user_name": username,
+                "password": password,
+                "email": email,
+                "plant1": plant1,
+                "plant2": plant2,
+                "created_at": datetime.datetime.now()
+            }
 
-            # write this document to the collection
+            # Writing this document to the collection
             collection.insert_one(document)
 
-            # clear everything and set credential check flag to True
+            # Clearing the form and displaying the success message
             placeholder.empty()
-
-            st.title(f"Welcome New User")
-            st.subheader(f"Please refresh the page or click the button to login to the virtual world of tbi_botanagochi!🌱")
+            st.title(f"Welcome, {username}!")
+            st.subheader("🎉 Registration successful! 🎉")
+            st.subheader(
+                "Please refresh the page or click the button to log in to the virtual world of tbi_botanagochi! 🌱")
             st.image("images/loginpage_banner.gif")

@@ -72,7 +72,7 @@ def navigate_to(page, origin=None):
     st.session_state.page = page
     if origin:
         st.session_state.error_origin = origin
-    st.rerun()
+    st.rerun() #to elimilate the issue with clicking the button twice to proceed. Information taken from https://docs.streamlit.io/develop/api-reference/execution-flow/st.rerun
 
 # Login Page - the code was taken from the in-class practices and adjusted according to the app
 def login_page():
@@ -85,8 +85,8 @@ def login_page():
     )
 
     with st.form("login_form"):
-        user_name = st.text_input("Username", placeholder="Enter your username").lower()
-        password = st.text_input("Password", placeholder="Enter your password", type="password")
+        user_name = st.text_input("Username", placeholder="Enter your username").strip().lower()
+        password = st.text_input("Password", placeholder="Enter your password", type="password").strip()
         login_button = st.form_submit_button("Login")
         register_button = st.form_submit_button("Register")
 
@@ -130,20 +130,20 @@ def home():
 
     # Left Column: Start Game and Plant Chores Checklist
     with col1:
-        st.image("images/game_start.gif", use_column_width=True)
+        st.image("images/game_start.gif", use_container_width=True)
         if st.button("Start the game"):
             navigate_to('game_start_page')
 
-        st.image("images/checklist.gif", use_column_width=True)
+        st.image("images/checklist.gif", use_container_width=True)
         if st.button("Plant Chores Checklist"):
             navigate_to('plant_chores_checklist')
     # Right Column: AI Chatbot to identify plants and Plant Trading Community
     with col2:
-        st.image("images/ai.gif", use_column_width=True)
+        st.image("images/ai.gif", use_container_width=True)
         if st.button("AI Chatbot: Identify Your Plant"):
             navigate_to('ai_chatbot')
 
-        st.image("images/plant_community.gif", use_column_width=True)
+        st.image("images/plant_community.gif", use_container_width=True)
         if st.button("Plant Trading Community"):
             navigate_to('plant_trade_community')
 
@@ -269,16 +269,16 @@ def plant_trade_community():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.image("images/arrow_right.png", use_column_width=True)
+        st.image("images/arrow_right.png", use_container_width=True)
 
     with col2:
-        st.image("images/qr_code.png", use_column_width=True)
+        st.image("images/qr_code.png", use_container_width=True)
 
         if st.button("Back to Home"):
             navigate_to('home')
 
     with col3:
-        st.image("images/arrow_left.png", use_column_width=True)
+        st.image("images/arrow_left.png", use_container_width=True)
 
 # Plant Chores Checklist Page where the user is given a To-Do list to check if they need in real life
 def plant_chores_checklist():
@@ -322,12 +322,12 @@ def plant_selection():
     )
     col1, col2 = st.columns(2)
     with col1:
-        st.image("images/spiderplant.png", use_column_width=True)
+        st.image("images/spiderplant.png", use_container_width=True)
         if st.button(f"Choose {st.session_state.plant1} (Your Spider Plant)"):
             st.session_state.plant = 'Spider Plant'
             navigate_to('soil_selection')
     with col2:
-        st.image("images/succulent.png", use_column_width=True)
+        st.image("images/succulent.png", use_container_width=True)
         if st.button(f"Choose {st.session_state.plant2} (Your succulent)"):
             st.session_state.plant = 'Succulent'
             navigate_to('soil_selection')
@@ -343,15 +343,15 @@ def soil_selection():
     )
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.image("images/well_draining_soil.png", use_column_width=True)
+        st.image("images/well_draining_soil.png", use_container_width=True)
         if st.button("Well draining soil"):
             navigate_to('placement') if st.session_state.plant == 'Spider Plant' else navigate_to('error', origin='soil_selection')
     with col2:
-        st.image("images/cactus_mix.png", use_column_width=True)
+        st.image("images/cactus_mix.png", use_container_width=True)
         if st.button("Cactus mix"):
             navigate_to('placement') if st.session_state.plant == 'Succulent' else navigate_to('error', origin='soil_selection')
     with col3:
-        st.image("images/poor_draining_soil.png", use_column_width=True)
+        st.image("images/poor_draining_soil.png", use_container_width=True)
         if st.button("Poor draining soil"):
             navigate_to('error', origin='soil_selection')
 
@@ -364,15 +364,15 @@ def placement():
     )
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.image("images/direct_sunlight.png", use_column_width=True)
+        st.image("images/direct_sunlight.png", use_container_width=True)
         if st.button("Direct sunlight"):
             navigate_to('error', origin='placement')
     with col2:
-        st.image("images/indirect_sunlight.png", use_column_width=True)
+        st.image("images/indirect_sunlight.png", use_container_width=True)
         if st.button("Indirect sunlight"):
             navigate_to('congratulations_one')
     with col3:
-        st.image("images/shade.png", use_column_width=True)
+        st.image("images/shade.png", use_container_width=True)
         if st.button("Shade"):
             navigate_to('error', origin='placement')
 
@@ -395,15 +395,15 @@ def watering():
     )
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.image("images/water_once_every_two_weeks.gif", use_column_width=True)
-        if st.button("Water once every two weeks"):
+        st.image("images/water_once_every_two_weeks.gif", use_container_width=True)
+        if st.button("Water once every 2 weeks"):
             navigate_to('congratulations_two') if st.session_state.plant == 'Succulent' else navigate_to('error', origin='watering')
     with col2:
-        st.image("images/water_once_a_week.gif", use_column_width=True)
+        st.image("images/water_once_a_week.gif", use_container_width=True)
         if st.button("Water once a week"):
             navigate_to('congratulations_two') if st.session_state.plant == 'Spider Plant' else navigate_to('error', origin='watering')
     with col3:
-        st.image("images/water_every_three_days.gif", use_column_width=True)
+        st.image("images/water_every_three_days.gif", use_container_width=True)
         if st.button("Water every 3 days"):
             navigate_to('error', origin='watering')
 
@@ -429,15 +429,15 @@ def spider_plant_challenge():
     st.write(f"Your {st.session_state.plant1} has yellow leaves. What could be the problem?")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.image("images/overwatering.gif", use_column_width=True)
+        st.image("images/overwatering.gif", use_container_width=True)
         if st.button("Overwatering"):
             navigate_to('congratulation_final_spider_plant')
     with col2:
-        st.image("images/too_much_sunlight.gif", use_column_width=True)
+        st.image("images/too_much_sunlight.gif", use_container_width=True)
         if st.button("Too much sunlight"):
             navigate_to('error', origin='spider_plant_challenge')
     with col3:
-        st.image("images/pest_infestation.gif", use_column_width=True)
+        st.image("images/pest_infestation.gif", use_container_width=True)
         if st.button("Pest infestation"):
             navigate_to('error', origin='spider_plant_challenge')
 
@@ -449,15 +449,15 @@ def succulent_challenge():
     st.write(f"Your {st.session_state.plant2} is growing tall and spindly (leggy). What is the cause of this?")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.image("images/too_much_sunlight_succulent.gif", use_column_width=True)
+        st.image("images/too_much_sunlight_succulent.gif", use_container_width=True)
         if st.button("Too much sunlight"):
             navigate_to('error', origin='succulent_challenge')
     with col2:
-        st.image("images/too_little_sunlight.gif", use_column_width=True)
+        st.image("images/too_little_sunlight.gif", use_container_width=True)
         if st.button("Too little sunlight"):
             navigate_to('congratulation_final_succulent')
     with col3:
-        st.image("images/overwatering_succulent.gif", use_column_width=True)
+        st.image("images/overwatering_succulent.gif", use_container_width=True)
         if st.button("Overwatering"):
             navigate_to('error', origin='succulent_challenge')
 
@@ -499,8 +499,6 @@ def reward_page_spider_plant():
     file_path = "https://www.youtube.com/watch?v=D1AvsRCyo9Y"
     st.video(file_path, muted=True, autoplay=True, start_time=2)
 
-    st.text(f"Please pause the video to navigate to the home page!")
-
     if st.button("Go to Home"):
         navigate_to('home')
 
@@ -518,14 +516,12 @@ def reward_page_succulent():
 
     file_path = "https://www.youtube.com/watch?v=6jpc9LN_Gkk"
     st.video(file_path, muted=True, autoplay=True, start_time=2)
-    st.text(f"Please pause the video to navigate to the home page!")
 
     if st.button("Go to Home"):
         navigate_to('home')
 
 #Error page where the user is taken when they make a mistake. The origion comes in handy in this page!
 def error_page():
-    st.title("Oops! Something went wrong.")
     st.image("images/error_page.png")
     if st.button("Go Back"):
         navigate_to(st.session_state.error_origin)
