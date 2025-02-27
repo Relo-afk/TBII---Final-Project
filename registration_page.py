@@ -35,12 +35,12 @@ def registration_page():
         # Validating the inputs
         if not username:
             st.error("Username is required.", icon="⚠️")
-        elif len(username) < 5:
-            st.error("Username must be at least 5 characters long.", icon="⚠️")
+        elif len(username) < 4:
+            st.error("Username must be at least 4 characters long.", icon="⚠️")
         elif not password:
             st.error("Password is required.", icon="⚠️")
-        elif len(password) < 4:
-            st.error("Password must be at least 4 characters long.", icon="⚠️")
+        elif len(password) < 5:
+            st.error("Password must be at least 5 characters long.", icon="⚠️")
         elif not email:
             st.error("Email is required.", icon="⚠️")
         elif "@" not in email or "." not in email:
