@@ -333,7 +333,7 @@ def plant_selection():
             navigate_to('soil_selection')
 
 #Soil selection page where depending on the session_state.plan the user is taken to next page when they give the respective correct answer
-#setting origin= for the user to continue from the same page and not from teh start when they make a mistake.
+#setting origin= for the user to continue from the same page and not from the start when they make a mistake.
 # This logic applies to all game pages.
 def soil_selection():
     plant_name = st.session_state.plant1 if st.session_state.plant == 'Spider Plant' else st.session_state.plant2
